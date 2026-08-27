@@ -11,6 +11,7 @@
 
     --text: #292724;
     --text-soft: #77736d;
+
     --border: #dedbd5;
 
     --sidebar: #292724;
@@ -61,9 +62,7 @@ select {
 }
 
 
-/* ================================================================
-   APP
-================================================================ */
+/* SIDEBAR */
 
 .app {
 
@@ -75,13 +74,9 @@ select {
 }
 
 
-/* ================================================================
-   SIDEBAR
-================================================================ */
-
 .sidebar {
 
-    width: 210px;
+    width: 200px;
 
     flex-shrink: 0;
 
@@ -97,16 +92,17 @@ select {
 
 .brand {
 
-    padding: 25px 22px 28px;
+    padding: 24px 20px;
 
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom:
+        1px solid rgba(255,255,255,0.08);
 
 }
 
 
 .brand-name {
 
-    font-size: 19px;
+    font-size: 18px;
 
     font-weight: 700;
 
@@ -119,21 +115,23 @@ select {
 
     margin-top: 4px;
 
-    font-size: 11px;
+    color: rgba(255,255,255,0.5);
 
-    color: rgba(255,255,255,0.55);
+    font-size: 10px;
 
 }
 
 
 .main-nav {
 
-    padding: 18px 10px;
+    padding: 16px 9px;
 
 }
 
 
 .nav-item {
+
+    display: block;
 
     width: 100%;
 
@@ -147,7 +145,7 @@ select {
 
     background: transparent;
 
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.62);
 
     text-align: left;
 
@@ -160,7 +158,8 @@ select {
 
 .nav-item:hover {
 
-    background: rgba(255,255,255,0.06);
+    background:
+        rgba(255,255,255,0.06);
 
     color: #ffffff;
 
@@ -169,7 +168,8 @@ select {
 
 .nav-item.active {
 
-    background: rgba(255,255,255,0.11);
+    background:
+        rgba(255,255,255,0.12);
 
     color: #ffffff;
 
@@ -180,18 +180,16 @@ select {
 
     margin-top: auto;
 
-    padding: 18px 22px;
+    padding: 18px 20px;
 
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.3);
 
-    font-size: 10px;
+    font-size: 9px;
 
 }
 
 
-/* ================================================================
-   MAIN
-================================================================ */
+/* MAIN */
 
 .main-area {
 
@@ -204,7 +202,7 @@ select {
 
 .topbar {
 
-    height: 72px;
+    height: 68px;
 
     display: flex;
 
@@ -212,11 +210,12 @@ select {
 
     justify-content: space-between;
 
-    padding: 0 28px;
+    padding: 0 26px;
 
     background: var(--surface);
 
-    border-bottom: 1px solid var(--border);
+    border-bottom:
+        1px solid var(--border);
 
 }
 
@@ -225,7 +224,7 @@ select {
 
     margin: 0;
 
-    font-size: 18px;
+    font-size: 17px;
 
     font-weight: 600;
 
@@ -240,7 +239,7 @@ select {
 
     color: var(--text-soft);
 
-    font-size: 11px;
+    font-size: 10px;
 
 }
 
@@ -256,36 +255,13 @@ select {
 }
 
 
-.topbar select {
-
-    height: 34px;
-
-    min-width: 145px;
-
-    padding: 0 9px;
-
-    border: 1px solid var(--border);
-
-    border-radius: 4px;
-
-    background: var(--surface);
-
-    color: var(--text);
-
-    font-size: 12px;
-
-}
-
-
-/* ================================================================
-   CONTENT
-================================================================ */
+/* CONTENT */
 
 .content {
 
-    padding: 20px 24px;
+    padding: 18px 22px;
 
-    max-width: 1500px;
+    max-width: 1450px;
 
 }
 
@@ -304,15 +280,13 @@ select {
 }
 
 
-/* ================================================================
-   BUTTONS
-================================================================ */
+/* BUTTONS */
 
 .primary-button {
 
-    height: 34px;
+    height: 33px;
 
-    padding: 0 14px;
+    padding: 0 13px;
 
     border: 0;
 
@@ -340,9 +314,10 @@ select {
 
 .small-button {
 
-    padding: 7px 10px;
+    padding: 6px 9px;
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
     border-radius: 4px;
 
@@ -367,50 +342,40 @@ select {
 
     color: var(--accent);
 
-    font-size: 11px;
+    font-size: 10px;
 
     cursor: pointer;
 
 }
 
 
-/* ================================================================
-   DASHBOARD
-================================================================ */
+/* DASHBOARD */
 
 .dashboard-grid {
 
     display: grid;
 
     grid-template-columns:
-        1.4fr
-        1fr
-        1fr
-        1fr;
+        1fr 1fr 1fr;
 
-    grid-template-rows:
-        auto
-        auto
-        auto;
-
-    gap: 12px;
+    gap: 11px;
 
 }
 
-
-/* BUDGET */
 
 .budget-card {
 
     grid-column: 1 / -1;
 
-    padding: 18px 20px;
+    padding: 17px 19px;
 
     background: var(--surface);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
-    border-left: 4px solid var(--accent);
+    border-left:
+        4px solid var(--accent);
 
 }
 
@@ -419,7 +384,7 @@ select {
 
     color: var(--text-soft);
 
-    font-size: 10px;
+    font-size: 9px;
 
     font-weight: 700;
 
@@ -436,7 +401,7 @@ select {
 
     justify-content: space-between;
 
-    margin-top: 8px;
+    margin-top: 7px;
 
 }
 
@@ -456,24 +421,23 @@ select {
 
     color: var(--accent);
 
-    font-size: 26px;
+    font-size: 24px;
 
     line-height: 1;
 
 }
 
 
-/* KPI */
-
 .metric-card {
 
-    min-height: 105px;
+    min-height: 96px;
 
-    padding: 16px 18px;
+    padding: 15px 17px;
 
     background: var(--surface);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
 }
 
@@ -482,9 +446,9 @@ select {
 
     display: block;
 
-    margin-top: 13px;
+    margin-top: 11px;
 
-    font-size: 22px;
+    font-size: 20px;
 
     line-height: 1;
 
@@ -497,31 +461,31 @@ select {
 
     display: block;
 
-    margin-top: 8px;
+    margin-top: 7px;
 
     color: var(--text-soft);
 
-    font-size: 11px;
+    font-size: 10px;
 
 }
 
 
 .projection-card {
 
-    border-top: 2px solid var(--success);
+    border-top:
+        2px solid var(--success);
 
 }
 
 
-/* ================================================================
-   PANELS
-================================================================ */
+/* PANELS */
 
 .panel {
 
     background: var(--surface);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
 }
 
@@ -534,9 +498,10 @@ select {
 
     justify-content: space-between;
 
-    padding: 14px 18px;
+    padding: 13px 17px;
 
-    border-bottom: 1px solid var(--border);
+    border-bottom:
+        1px solid var(--border);
 
 }
 
@@ -545,7 +510,7 @@ select {
 
     margin: 0;
 
-    font-size: 13px;
+    font-size: 12px;
 
     font-weight: 600;
 
@@ -569,42 +534,37 @@ select {
 
 .projection-panel {
 
-    grid-column: 1 / 4;
+    grid-column: 1 / 3;
 
 }
 
 
-.projection-grid {
+.projection-list {
 
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
+    width: 100%;
 
 }
 
 
-.projection-item {
+.projection-row {
 
     display: flex;
 
+    align-items: center;
+
     justify-content: space-between;
 
-    padding: 13px 18px;
+    min-height: 39px;
 
-    border-bottom: 1px solid var(--border);
+    padding: 8px 17px;
 
-}
-
-
-.projection-item:nth-child(odd) {
-
-    border-right: 1px solid var(--border);
+    border-bottom:
+        1px solid var(--border);
 
 }
 
 
-.projection-item span {
+.projection-row span {
 
     color: var(--text-soft);
 
@@ -613,12 +573,126 @@ select {
 }
 
 
-.projection-item strong {
+.projection-row strong {
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+.projection-row.negative strong {
+
+    color: var(--danger);
+
+}
+
+.manual-row {
+
+    min-height: 42px;
+
+}
+
+
+.manual-row label {
+
+    color: var(--text-soft);
+
+    font-size: 11px;
+
+}
+
+
+.manual-value {
+
+    display: flex;
+
+    align-items: center;
+
+    width: 145px;
+
+    height: 29px;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--surface-soft);
+
+}
+
+
+.manual-value span {
+
+    padding-left: 9px;
+
+    color: var(--text-soft);
+
+    font-size: 10px;
+
+}
+
+
+.manual-value input {
+
+    width: 100%;
+
+    height: 100%;
+
+    padding: 0 8px;
+
+    border: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--text);
+
+    text-align: right;
 
     font-size: 12px;
 
 }
 
+
+.manual-value input:focus {
+
+    background: #ffffff;
+
+    box-shadow:
+        inset 0 0 0 1px var(--accent);
+
+}
+
+
+.manual-row.negative label {
+
+    color: var(--danger);
+
+}
+
+
+.manual-row.negative .manual-value {
+
+    border-color:
+        rgba(161, 39, 43, 0.35);
+
+}
+
+
+.manual-row.negative .manual-value span {
+
+    color: var(--danger);
+
+}
+
+
+.manual-row.negative .manual-value input {
+
+    color: var(--danger);
+
+}
 
 .projection-total {
 
@@ -628,14 +702,14 @@ select {
 
     justify-content: space-between;
 
-    padding: 15px 18px;
+    padding: 14px 17px;
 
 }
 
 
 .projection-total span {
 
-    font-size: 10px;
+    font-size: 9px;
 
     font-weight: 700;
 
@@ -646,34 +720,26 @@ select {
 
 .projection-total strong {
 
-    font-size: 18px;
+    font-size: 17px;
 
 }
 
 
-/* PORTFOLIO MINI */
+/* PORTFOLIO */
 
 .portfolio-mini-panel {
 
-    grid-column: 4;
-
-}
-
-
-.portfolio-mini-grid {
-
-    display: grid;
-
-    grid-template-columns: 1fr;
+    grid-column: 3;
 
 }
 
 
 .portfolio-mini-grid > div {
 
-    padding: 10px 18px;
+    padding: 11px 17px;
 
-    border-bottom: 1px solid var(--border);
+    border-bottom:
+        1px solid var(--border);
 
 }
 
@@ -707,9 +773,7 @@ select {
 }
 
 
-/* ================================================================
-   OTHER SECTIONS
-================================================================ */
+/* SECTION HEADER */
 
 .section-intro {
 
@@ -719,7 +783,7 @@ select {
 
     justify-content: space-between;
 
-    margin-bottom: 14px;
+    margin-bottom: 13px;
 
 }
 
@@ -728,14 +792,86 @@ select {
 
     margin: 0;
 
-    font-size: 18px;
+    font-size: 17px;
+
+    font-weight: 600;
 
 }
 
 
 .section-intro p {
 
-    margin: 4px 0 0;
+    margin: 3px 0 0;
+
+    color: var(--text-soft);
+
+    font-size: 10px;
+
+}
+
+
+/* BUDGET */
+
+.budget-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 10px;
+
+}
+
+
+.budget-month-card {
+
+    padding: 15px;
+
+    background: var(--surface);
+
+    border:
+        1px solid var(--border);
+
+}
+
+
+.budget-month-card label {
+
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: var(--text-soft);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+}
+
+
+.budget-input-wrapper {
+
+    display: flex;
+
+    align-items: center;
+
+    height: 34px;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--surface-soft);
+
+}
+
+
+.budget-input-wrapper span {
+
+    padding-left: 9px;
 
     color: var(--text-soft);
 
@@ -744,26 +880,19 @@ select {
 }
 
 
-.empty-state {
+.budget-input-wrapper input {
 
-    display: flex;
+    width: 100%;
 
-    flex-direction: column;
+    height: 100%;
 
-    align-items: center;
+    padding: 0 9px;
 
-    justify-content: center;
+    border: 0;
 
-    min-height: 180px;
+    outline: none;
 
-    gap: 5px;
-
-    color: var(--text-soft);
-
-}
-
-
-.empty-state strong {
+    background: transparent;
 
     color: var(--text);
 
@@ -772,9 +901,29 @@ select {
 }
 
 
-.empty-state span {
+.budget-actions {
 
-    font-size: 11px;
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 13px;
+
+    padding: 14px 17px;
+
+    background: var(--surface);
+
+    border:
+        1px solid var(--border);
+
+}
+
+
+.budget-actions strong {
+
+    font-size: 13px;
 
 }
 
@@ -788,16 +937,16 @@ select {
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 12px;
+    gap: 11px;
 
-    margin-bottom: 14px;
+    margin-bottom: 13px;
 
 }
 
 
 .compact-stat {
 
-    padding: 16px 18px;
+    padding: 15px 17px;
 
 }
 
@@ -815,75 +964,20 @@ select {
 
     display: block;
 
-    margin-top: 7px;
+    margin-top: 6px;
 
-    font-size: 20px;
+    font-size: 19px;
 
 }
 
 
 .import-status-box {
 
-    padding: 16px 18px;
+    padding: 15px 17px;
 
     color: var(--text-soft);
 
     font-size: 11px;
-
-}
-
-
-/* BUDGET FORM */
-
-.budget-form {
-
-    display: flex;
-
-    align-items: flex-end;
-
-    gap: 14px;
-
-    padding: 20px;
-
-}
-
-
-.form-field {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 5px;
-
-}
-
-
-.form-field label {
-
-    color: var(--text-soft);
-
-    font-size: 10px;
-
-}
-
-
-.form-field input,
-.form-field select {
-
-    height: 34px;
-
-    min-width: 190px;
-
-    padding: 0 9px;
-
-    border: 1px solid var(--border);
-
-    border-radius: 4px;
-
-    background: var(--surface);
-
-    color: var(--text);
 
 }
 
@@ -897,14 +991,14 @@ select {
     grid-template-columns:
         1fr 1fr;
 
-    gap: 14px;
+    gap: 12px;
 
 }
 
 
 .analysis-placeholder {
 
-    min-height: 240px;
+    min-height: 220px;
 
     display: flex;
 
@@ -914,7 +1008,7 @@ select {
 
     justify-content: center;
 
-    gap: 6px;
+    gap: 5px;
 
     color: var(--text-soft);
 
@@ -925,14 +1019,19 @@ select {
 
     color: var(--text);
 
-    font-size: 13px;
+    font-size: 12px;
 
 }
 
 
-/* ================================================================
-   HIDDEN
-================================================================ */
+.analysis-placeholder span {
+
+    font-size: 10px;
+
+}
+
+
+/* HIDDEN */
 
 .hidden {
 
@@ -941,11 +1040,9 @@ select {
 }
 
 
-/* ================================================================
-   RESPONSIVE
-================================================================ */
+/* RESPONSIVE */
 
-@media (max-width: 1000px) {
+@media (max-width: 900px) {
 
     .sidebar {
 
@@ -957,7 +1054,7 @@ select {
     .dashboard-grid {
 
         grid-template-columns:
-            repeat(2, 1fr);
+            1fr 1fr;
 
     }
 
@@ -966,28 +1063,22 @@ select {
     .projection-panel,
     .portfolio-mini-panel {
 
-        grid-column: auto;
-
-    }
-
-
-    .projection-panel {
-
         grid-column: 1 / -1;
 
     }
 
 
-    .portfolio-mini-panel {
+    .budget-grid {
 
-        grid-column: 1 / -1;
+        grid-template-columns:
+            repeat(3, 1fr);
 
     }
 
 }
 
 
-@media (max-width: 700px) {
+@media (max-width: 650px) {
 
     .app {
 
@@ -999,8 +1090,6 @@ select {
     .sidebar {
 
         width: 100%;
-
-        min-height: auto;
 
     }
 
@@ -1034,13 +1123,13 @@ select {
 
         height: auto;
 
-        padding: 14px 16px;
+        padding: 13px 15px;
 
-        gap: 12px;
+        flex-direction: column;
 
         align-items: flex-start;
 
-        flex-direction: column;
+        gap: 10px;
 
     }
 
@@ -1052,16 +1141,9 @@ select {
     }
 
 
-    .topbar select {
-
-        flex: 1;
-
-    }
-
-
     .content {
 
-        padding: 14px;
+        padding: 13px;
 
     }
 
@@ -1073,16 +1155,10 @@ select {
     }
 
 
-    .projection-grid {
+    .budget-grid {
 
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .projection-item:nth-child(odd) {
-
-        border-right: 0;
+        grid-template-columns:
+            repeat(2, 1fr);
 
     }
 
@@ -1091,15 +1167,6 @@ select {
     .analysis-grid {
 
         grid-template-columns: 1fr;
-
-    }
-
-
-    .budget-form {
-
-        flex-direction: column;
-
-        align-items: stretch;
 
     }
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Budget | Proiezione Fatturato</title>
+    <title>Budget | Proiezione fatturato</title>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -14,7 +14,6 @@
 
 <div class="app">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
 
         <div class="brand">
@@ -25,27 +24,19 @@
         <nav class="main-nav">
 
             <button class="nav-item active" data-section="dashboard">
-                <span>Dashboard</span>
-            </button>
-
-            <button class="nav-item" data-section="movements">
-                <span>Movimenti</span>
-            </button>
-
-            <button class="nav-item" data-section="portfolio">
-                <span>Portafoglio</span>
+                Dashboard
             </button>
 
             <button class="nav-item" data-section="budget">
-                <span>Budget</span>
+                Budget
+            </button>
+
+            <button class="nav-item" data-section="portfolio">
+                Portafoglio
             </button>
 
             <button class="nav-item" data-section="analysis">
-                <span>Analisi</span>
-            </button>
-
-            <button class="nav-item" data-section="settings">
-                <span>Impostazioni</span>
+                Analisi
             </button>
 
         </nav>
@@ -57,34 +48,19 @@
     </aside>
 
 
-    <!-- CONTENUTO -->
     <div class="main-area">
 
         <header class="topbar">
 
             <div>
                 <h1 id="page-title">Dashboard</h1>
+
                 <span id="page-subtitle">
                     Situazione e proiezione del fatturato
                 </span>
             </div>
 
             <div class="topbar-actions">
-
-                <select id="projection-month">
-                    <option value="2026-01">Gennaio 2026</option>
-                    <option value="2026-02">Febbraio 2026</option>
-                    <option value="2026-03">Marzo 2026</option>
-                    <option value="2026-04">Aprile 2026</option>
-                    <option value="2026-05">Maggio 2026</option>
-                    <option value="2026-06">Giugno 2026</option>
-                    <option value="2026-07">Luglio 2026</option>
-                    <option value="2026-08" selected>Agosto 2026</option>
-                    <option value="2026-09">Settembre 2026</option>
-                    <option value="2026-10">Ottobre 2026</option>
-                    <option value="2026-11">Novembre 2026</option>
-                    <option value="2026-12">Dicembre 2026</option>
-                </select>
 
                 <button
                     class="primary-button"
@@ -109,9 +85,7 @@
         <main class="content">
 
 
-            <!-- ======================================================
-                 DASHBOARD
-            ======================================================= -->
+            <!-- DASHBOARD -->
 
             <section
                 class="app-section active"
@@ -120,7 +94,7 @@
 
                 <div class="dashboard-grid">
 
-                    <!-- BUDGET -->
+
                     <article class="budget-card">
 
                         <div class="card-label">
@@ -131,7 +105,7 @@
 
                             <div>
                                 <div class="card-caption">
-                                    Obiettivo
+                                    Obiettivo del mese
                                 </div>
 
                                 <strong id="dashboard-budget">
@@ -143,7 +117,7 @@
                                 class="small-button"
                                 id="edit-budget-button"
                             >
-                                Modifica
+                                Vai al budget
                             </button>
 
                         </div>
@@ -151,7 +125,6 @@
                     </article>
 
 
-                    <!-- REALIZZATO -->
                     <article class="metric-card">
 
                         <div class="card-label">
@@ -169,7 +142,6 @@
                     </article>
 
 
-                    <!-- PROIEZIONE -->
                     <article class="metric-card projection-card">
 
                         <div class="card-label">
@@ -187,11 +159,10 @@
                     </article>
 
 
-                    <!-- SCOSTAMENTO -->
                     <article class="metric-card">
 
                         <div class="card-label">
-                            SCOSTAMENTO
+                            SCOSTAMENTO DAL BUDGET
                         </div>
 
                         <strong id="dashboard-gap">
@@ -205,53 +176,124 @@
                     </article>
 
 
-                    <!-- COMPOSIZIONE -->
                     <article class="panel projection-panel">
 
                         <div class="panel-header">
+
                             <div>
-                                <h2>Composizione della proiezione</h2>
+                                <h2>
+                                    Composizione della proiezione
+                                </h2>
+
                                 <span>
-                                    Contributo delle diverse fonti
+                                    Situazione del mese
                                 </span>
                             </div>
+
                         </div>
 
-                        <div class="projection-grid">
 
-                            <div class="projection-item">
-                                <span>DDT / Fatture</span>
-                                <strong id="projection-invoiced">
-                                    € 0,00
-                                </strong>
+                        <div class="projection-row manual-row">
+
+                            <label for="manual-ddt">
+                                DDT emessi
+                            </label>
+
+                            <div class="manual-value">
+                                <span>€</span>
+
+                                <input
+                                    id="manual-ddt"
+                                    type="text"
+                                    inputmode="decimal"
+                                    autocomplete="off"
+                                    placeholder="0,00"
+                                >
                             </div>
 
-                            <div class="projection-item">
-                                <span>Ordini certi</span>
+                        </div>
+
+                        <div class="projection-row manual-row negative">
+
+                            <label for="manual-credit-notes">
+                                Note di credito
+                            </label>
+
+                            <div class="manual-value">
+                                <span>€</span>
+
+                                <input
+                                    id="manual-credit-notes"
+                                    type="text"
+                                    inputmode="decimal"
+                                    autocomplete="off"
+                                    placeholder="0,00"
+                                >
+                            </div>
+
+                        </div>
+
+
+                            <div class="projection-row">
+
+                                <span>
+                                    Ordini sbloccati
+                                </span>
+
                                 <strong id="projection-certain">
                                     € 0,00
                                 </strong>
+
                             </div>
 
-                            <div class="projection-item">
-                                <span>Ordini probabili</span>
+
+                            <div class="projection-row">
+
+                                <span>
+                                    Ordini bloccati
+                                </span>
+
                                 <strong id="projection-probable">
                                     € 0,00
                                 </strong>
+
                             </div>
 
-                            <div class="projection-item">
-                                <span>Portafoglio</span>
+
+                            <div class="projection-row">
+
+                                <span>
+                                    Ordini a portafoglio
+                                </span>
+
+                                <strong id="projection-portfolio">
+                                    € 0,00
+                                </strong>
+
+                            </div>
+
+
+                            <div class="projection-row">
+
+                                <span>
+                                    Backlog
+                                </span>
+
                                 <strong id="projection-backlog">
                                     € 0,00
                                 </strong>
+
                             </div>
+
 
                         </div>
 
+
                         <div class="projection-total">
 
-                            <span>PROIEZIONE TOTALE</span>
+                            <span>
+                                PROIEZIONE TOTALE
+                            </span>
 
                             <strong id="projection-total">
                                 € 0,00
@@ -262,16 +304,17 @@
                     </article>
 
 
-                    <!-- STATO PORTAFOGLIO -->
                     <article class="panel portfolio-mini-panel">
 
                         <div class="panel-header">
 
                             <div>
-                                <h2>Portafoglio</h2>
+                                <h2>
+                                    Portafoglio
+                                </h2>
 
                                 <span>
-                                    Ultimo dato importato
+                                    Ultimo file importato
                                 </span>
                             </div>
 
@@ -295,6 +338,7 @@
                                 </strong>
                             </div>
 
+
                             <div>
                                 <span>Quantità a saldo</span>
 
@@ -302,6 +346,7 @@
                                     0
                                 </strong>
                             </div>
+
 
                             <div>
                                 <span>Valore</span>
@@ -315,63 +360,322 @@
 
                     </article>
 
+
                 </div>
 
             </section>
 
 
-            <!-- ======================================================
-                 MOVIMENTI
-            ======================================================= -->
+            <!-- BUDGET -->
 
             <section
                 class="app-section"
-                id="section-movements"
+                id="section-budget"
             >
 
                 <div class="section-intro">
 
                     <div>
-                        <h2>Movimenti</h2>
+                        <h2>Budget annuale</h2>
 
                         <p>
-                            Inserimento del fatturato già realizzato.
+                            Inserisci manualmente il budget previsto
+                            per ogni mese.
                         </p>
                     </div>
-
-                    <button
-                        class="primary-button"
-                        id="new-movement-button"
-                    >
-                        Nuovo movimento
-                    </button>
 
                 </div>
 
 
-                <div class="panel">
+                <div class="budget-grid">
 
-                    <div class="empty-state">
 
-                        <strong>
-                            Nessun movimento inserito
-                        </strong>
+                    <article class="budget-month-card">
 
-                        <span>
-                            Qui verranno registrati DDT, fatture e note
-                            di credito.
-                        </span>
+                        <label for="budget-01">
+                            GENNAIO
+                        </label>
 
-                    </div>
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-01"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-01"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-02">
+                            FEBBRAIO
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-02"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-02"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-03">
+                            MARZO
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-03"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-03"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-04">
+                            APRILE
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-04"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-04"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-05">
+                            MAGGIO
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-05"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-05"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-06">
+                            GIUGNO
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-06"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-06"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-07">
+                            LUGLIO
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-07"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-07"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-08">
+                            AGOSTO
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-08"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-08"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-09">
+                            SETTEMBRE
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-09"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-09"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-10">
+                            OTTOBRE
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-10"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-10"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-11">
+                            NOVEMBRE
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-11"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-11"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                    <article class="budget-month-card">
+
+                        <label for="budget-12">
+                            DICEMBRE
+                        </label>
+
+                        <div class="budget-input-wrapper">
+                            <span>€</span>
+
+                            <input
+                                id="budget-12"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                data-month="2026-12"
+                                placeholder="0,00"
+                            >
+                        </div>
+
+                    </article>
+
+
+                </div>
+
+
+                <div class="budget-actions">
+
+                    <strong id="annual-budget-total">
+                        Budget annuale: € 0,00
+                    </strong>
+
+                    <button
+                        class="primary-button"
+                        id="save-budget-button"
+                    >
+                        Salva budget
+                    </button>
 
                 </div>
 
             </section>
 
 
-            <!-- ======================================================
-                 PORTAFOGLIO
-            ======================================================= -->
+            <!-- PORTAFOGLIO -->
 
             <section
                 class="app-section"
@@ -384,7 +688,7 @@
                         <h2>Portafoglio</h2>
 
                         <p>
-                            Ordini ancora aperti e dati importati.
+                            Ordini ancora aperti importati dal file Excel.
                         </p>
                     </div>
 
@@ -401,18 +705,41 @@
                 <div class="portfolio-overview">
 
                     <article class="panel compact-stat">
-                        <span>Righe importate</span>
-                        <strong id="portfolio-rows">0</strong>
+
+                        <span>
+                            Righe importate
+                        </span>
+
+                        <strong id="portfolio-rows">
+                            0
+                        </strong>
+
                     </article>
 
-                    <article class="panel compact-stat">
-                        <span>Quantità a saldo</span>
-                        <strong id="portfolio-quantity">0</strong>
-                    </article>
 
                     <article class="panel compact-stat">
-                        <span>Valore portafoglio</span>
-                        <strong id="portfolio-value">€ 0,00</strong>
+
+                        <span>
+                            Quantità a saldo
+                        </span>
+
+                        <strong id="portfolio-quantity">
+                            0
+                        </strong>
+
+                    </article>
+
+
+                    <article class="panel compact-stat">
+
+                        <span>
+                            Valore portafoglio
+                        </span>
+
+                        <strong id="portfolio-value">
+                            € 0,00
+                        </strong>
+
                     </article>
 
                 </div>
@@ -422,9 +749,9 @@
 
                     <div class="panel-header">
 
-                        <div>
-                            <h2>Stato importazione</h2>
-                        </div>
+                        <h2>
+                            Stato importazione
+                        </h2>
 
                     </div>
 
@@ -446,90 +773,7 @@
             </section>
 
 
-            <!-- ======================================================
-                 BUDGET
-            ======================================================= -->
-
-            <section
-                class="app-section"
-                id="section-budget"
-            >
-
-                <div class="section-intro">
-
-                    <div>
-                        <h2>Budget mensile</h2>
-
-                        <p>
-                            Definizione degli obiettivi di fatturato.
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <div class="panel">
-
-                    <div class="budget-form">
-
-                        <div class="form-field">
-
-                            <label for="budget-month">
-                                Mese
-                            </label>
-
-                            <select id="budget-month">
-                                <option value="2026-01">Gennaio 2026</option>
-                                <option value="2026-02">Febbraio 2026</option>
-                                <option value="2026-03">Marzo 2026</option>
-                                <option value="2026-04">Aprile 2026</option>
-                                <option value="2026-05">Maggio 2026</option>
-                                <option value="2026-06">Giugno 2026</option>
-                                <option value="2026-07">Luglio 2026</option>
-                                <option value="2026-08" selected>Agosto 2026</option>
-                                <option value="2026-09">Settembre 2026</option>
-                                <option value="2026-10">Ottobre 2026</option>
-                                <option value="2026-11">Novembre 2026</option>
-                                <option value="2026-12">Dicembre 2026</option>
-                            </select>
-
-                        </div>
-
-
-                        <div class="form-field">
-
-                            <label for="budget-value">
-                                Budget
-                            </label>
-
-                            <input
-                                id="budget-value"
-                                type="number"
-                                min="0"
-                                step="0.01"
-                                placeholder="0,00"
-                            >
-
-                        </div>
-
-
-                        <button
-                            class="primary-button"
-                            id="save-budget-button"
-                        >
-                            Salva budget
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ======================================================
-                 ANALISI
-            ======================================================= -->
+            <!-- ANALISI -->
 
             <section
                 class="app-section"
@@ -542,8 +786,7 @@
                         <h2>Analisi</h2>
 
                         <p>
-                            Andamento storico, famiglie e analisi del
-                            portafoglio.
+                            Analisi storica e approfondimenti.
                         </p>
                     </div>
 
@@ -553,53 +796,26 @@
                 <div class="analysis-grid">
 
                     <div class="panel analysis-placeholder">
-                        <strong>Andamento mensile</strong>
-                        <span>Grafico in costruzione.</span>
-                    </div>
-
-                    <div class="panel analysis-placeholder">
-                        <strong>Analisi per famiglia</strong>
-                        <span>Analisi in costruzione.</span>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ======================================================
-                 IMPOSTAZIONI
-            ======================================================= -->
-
-            <section
-                class="app-section"
-                id="section-settings"
-            >
-
-                <div class="section-intro">
-
-                    <div>
-                        <h2>Impostazioni</h2>
-
-                        <p>
-                            Configurazione del sistema.
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <div class="panel">
-
-                    <div class="empty-state">
 
                         <strong>
-                            Impostazioni
+                            Andamento mensile
                         </strong>
 
                         <span>
-                            Le configurazioni del sistema verranno
-                            aggiunte successivamente.
+                            Grafico in costruzione.
+                        </span>
+
+                    </div>
+
+
+                    <div class="panel analysis-placeholder">
+
+                        <strong>
+                            Analisi per famiglia
+                        </strong>
+
+                        <span>
+                            Analisi in costruzione.
                         </span>
 
                     </div>

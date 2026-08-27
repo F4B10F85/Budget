@@ -1,17 +1,14 @@
 "use strict";
 
-/*
-|--------------------------------------------------------------------------
-| Budget - Application
-|--------------------------------------------------------------------------
-*/
 
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-document.addEventListener("DOMContentLoaded", () => {
+        initializeApplication();
 
-    initializeApplication();
-
-});
+    }
+);
 
 
 function initializeApplication() {
@@ -22,37 +19,43 @@ function initializeApplication() {
 
     initializeBudgetForm();
 
-    initializeMonthSelector();
+    initializeManualValues();
 
     initializeExcelImport();
 
-    console.log("Budget inizializzato.");
+    updateDashboardBudget();
+
+    updateAnnualBudgetTotal();
+
+    console.log(
+        "Budget inizializzato."
+    );
 
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| NAVIGAZIONE
-|--------------------------------------------------------------------------
-*/
+/* NAVIGAZIONE */
 
 function initializeNavigation() {
 
     const navItems =
-        document.querySelectorAll(".nav-item");
+        document.querySelectorAll(
+            ".nav-item"
+        );
 
 
     navItems.forEach(item => {
 
-        item.addEventListener("click", () => {
+        item.addEventListener(
+            "click",
+            () => {
 
-            const section =
-                item.dataset.section;
+                showSection(
+                    item.dataset.section
+                );
 
-            showSection(section);
-
-        });
+            }
+        );
 
     });
 
@@ -65,28 +68,57 @@ function initializeNavigation() {
 
     internalLinks.forEach(button => {
 
-        button.addEventListener("click", () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-            showSection(
-                button.dataset.sectionTarget
-            );
+                showSection(
+                    button.dataset.sectionTarget
+                );
 
-        });
+            }
+        );
 
     });
+
+
+    const budgetButton =
+        document.getElementById(
+            "edit-budget-button"
+        );
+
+
+    if (budgetButton) {
+
+        budgetButton.addEventListener(
+            "click",
+            () => {
+
+                showSection("budget");
+
+            }
+        );
+
+    }
 
 }
 
 
-function showSection(sectionName) {
+function showSection(
+    sectionName
+) {
 
     const sections =
-        document.querySelectorAll(".app-section");
+        document.querySelectorAll(
+            ".app-section"
+        );
 
 
     sections.forEach(section => {
 
-        section.classList.remove("active");
+        section.classList.remove(
+            "active"
+        );
 
     });
 
@@ -99,37 +131,42 @@ function showSection(sectionName) {
 
     if (target) {
 
-        target.classList.add("active");
+        target.classList.add(
+            "active"
+        );
 
     }
 
 
     const navItems =
-        document.querySelectorAll(".nav-item");
+        document.querySelectorAll(
+            ".nav-item"
+        );
 
 
     navItems.forEach(item => {
 
         item.classList.toggle(
             "active",
-            item.dataset.section === sectionName
+            item.dataset.section ===
+                sectionName
         );
 
     });
 
 
-    updatePageHeader(sectionName);
+    updatePageHeader(
+        sectionName
+    );
 
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| HEADER
-|--------------------------------------------------------------------------
-*/
+/* HEADER */
 
-function updatePageHeader(sectionName) {
+function updatePageHeader(
+    sectionName
+) {
 
     const titles = {
 
@@ -138,9 +175,9 @@ function updatePageHeader(sectionName) {
             "Situazione e proiezione del fatturato"
         ],
 
-        movements: [
-            "Movimenti",
-            "DDT, fatture e note di credito"
+        budget: [
+            "Budget annuale",
+            "Obiettivi mensili di fatturato"
         ],
 
         portfolio: [
@@ -148,19 +185,9 @@ function updatePageHeader(sectionName) {
             "Ordini ancora aperti"
         ],
 
-        budget: [
-            "Budget",
-            "Obiettivi mensili di fatturato"
-        ],
-
         analysis: [
             "Analisi",
             "Andamento e approfondimenti"
-        ],
-
-        settings: [
-            "Impostazioni",
-            "Configurazione del sistema"
         ]
 
     };
@@ -176,76 +203,101 @@ function updatePageHeader(sectionName) {
 
 
     const title =
-        document.getElementById("page-title");
+        document.getElementById(
+            "page-title"
+        );
 
 
     const subtitle =
-        document.getElementById("page-subtitle");
+        document.getElementById(
+            "page-subtitle"
+        );
 
 
     if (title) {
-        title.textContent = data[0];
+
+        title.textContent =
+            data[0];
+
     }
 
 
     if (subtitle) {
-        subtitle.textContent = data[1];
+
+        subtitle.textContent =
+            data[1];
+
     }
 
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| IMPORTAZIONE
-|--------------------------------------------------------------------------
-*/
+/* IMPORTAZIONE */
 
 function initializeImportButtons() {
 
     const fileInput =
-        document.getElementById("excel-file");
+        document.getElementById(
+            "excel-file"
+        );
 
-
-    const buttons = [
-
+    const importButton =
         document.getElementById(
             "import-button"
-        ),
+        );
 
+    const portfolioImportButton =
         document.getElementById(
             "portfolio-import-button"
-        )
-
-    ];
+        );
 
 
-    buttons.forEach(button => {
+    if (!fileInput) {
 
-        if (!button) {
-            return;
-        }
+        console.error(
+            "Input Excel #excel-file non trovato."
+        );
+
+        return;
+
+    }
 
 
-        button.addEventListener(
+    if (importButton) {
+
+        importButton.addEventListener(
             "click",
-            () => {
+            function () {
 
-                fileInput?.click();
+                fileInput.value = "";
+
+                fileInput.click();
 
             }
         );
 
-    });
+    }
+
+
+    if (portfolioImportButton) {
+
+        portfolioImportButton.addEventListener(
+            "click",
+            function () {
+
+                fileInput.value = "";
+
+                fileInput.click();
+
+            }
+        );
+
+    }
 
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| BUDGET
-|--------------------------------------------------------------------------
-*/
+/* BUDGET */
 
 function initializeBudgetForm() {
 
@@ -255,107 +307,115 @@ function initializeBudgetForm() {
         );
 
 
-    const monthInput =
-        document.getElementById(
-            "budget-month"
-        );
-
-
-    const valueInput =
-        document.getElementById(
-            "budget-value"
-        );
-
-
     if (!saveButton) {
         return;
     }
 
 
+    loadBudgetsIntoForm();
+
+
     saveButton.addEventListener(
         "click",
-        () => {
-
-            const month =
-                monthInput.value;
-
-
-            const value =
-                Number(valueInput.value);
-
-
-            if (
-                !month ||
-                Number.isNaN(value) ||
-                value < 0
-            ) {
-
-                alert(
-                    "Inserisci un valore di budget valido."
-                );
-
-                return;
-
-            }
-
-
-            saveMonthlyBudget(
-                month,
-                value
-            );
-
-        }
+        saveAllBudgets
     );
 
 
-    const editButton =
-        document.getElementById(
-            "edit-budget-button"
+    const inputs =
+        document.querySelectorAll(
+            ".budget-month-card input"
         );
 
 
-    if (editButton) {
+    inputs.forEach(input => {
 
-        editButton.addEventListener(
-            "click",
-            () => {
-
-                showSection("budget");
-
-                monthInput.focus();
-
-            }
+        input.addEventListener(
+            "input",
+            updateAnnualBudgetTotal
         );
 
-    }
+    });
 
 }
 
 
-function saveMonthlyBudget(
-    month,
-    value
-) {
+function loadBudgetsIntoForm() {
 
-    const budget =
+    const budgets =
         getStoredBudgets();
 
 
-    budget[month] =
-        value;
+    const inputs =
+        document.querySelectorAll(
+            ".budget-month-card input"
+        );
+
+
+    inputs.forEach(input => {
+
+        const month =
+            input.dataset.month;
+
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                budgets,
+                month
+            )
+        ) {
+
+            input.value =
+                budgets[month];
+
+        }
+
+    });
+
+}
+
+
+function saveAllBudgets() {
+
+    const budgets = {};
+
+
+    const inputs =
+        document.querySelectorAll(
+            ".budget-month-card input"
+        );
+
+
+    inputs.forEach(input => {
+
+        const month =
+            input.dataset.month;
+
+
+        const value =
+            Number(input.value);
+
+
+        budgets[month] =
+            Number.isFinite(value) &&
+            value >= 0
+                ? value
+                : 0;
+
+    });
 
 
     localStorage.setItem(
         "budget-monthly",
-        JSON.stringify(budget)
+        JSON.stringify(budgets)
     );
 
 
+    updateAnnualBudgetTotal();
+
     updateDashboardBudget();
 
-
     alert(
-        "Budget mensile salvato."
+        "Budget annuale salvato."
     );
 
 }
@@ -385,12 +445,55 @@ function getStoredBudgets() {
 }
 
 
+function updateAnnualBudgetTotal() {
+
+    const inputs =
+        document.querySelectorAll(
+            ".budget-month-card input"
+        );
+
+
+    let total = 0;
+
+
+    inputs.forEach(input => {
+
+        const value =
+            Number(input.value);
+
+
+        if (
+            Number.isFinite(value) &&
+            value >= 0
+        ) {
+
+            total += value;
+
+        }
+
+    });
+
+
+    const element =
+        document.getElementById(
+            "annual-budget-total"
+        );
+
+
+    if (element) {
+
+        element.textContent =
+            `Budget annuale: ${formatCurrency(total)}`;
+
+    }
+
+}
+
+
 function updateDashboardBudget() {
 
     const month =
-        document.getElementById(
-            "projection-month"
-        )?.value;
+        getCurrentMonth();
 
 
     const budgets =
@@ -422,50 +525,38 @@ function updateDashboardBudget() {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| MESE
-|--------------------------------------------------------------------------
-*/
+function getCurrentMonth() {
 
-function initializeMonthSelector() {
+    const now =
+        new Date();
 
-    const selector =
-        document.getElementById(
-            "projection-month"
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
         );
 
 
-    if (!selector) {
-        return;
-    }
-
-
-    selector.addEventListener(
-        "change",
-        () => {
-
-            updateDashboardBudget();
-
-        }
-    );
-
-
-    updateDashboardBudget();
+    return `${year}-${month}`;
 
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| METRICHE
-|--------------------------------------------------------------------------
-*/
+/* METRICHE */
 
 function updateDashboardMetrics() {
 
     const budget =
-        getCurrentBudget();
+        getStoredBudgets()[
+            getCurrentMonth()
+        ] || 0;
 
 
     const realized =
@@ -527,32 +618,12 @@ function updateDashboardMetrics() {
 }
 
 
-function getCurrentBudget() {
+/* UTILITY */
 
-    const month =
-        document.getElementById(
-            "projection-month"
-        )?.value;
-
-
-    const budgets =
-        getStoredBudgets();
-
-
-    return Number(
-        budgets[month] || 0
-    );
-
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| UTILITY
-|--------------------------------------------------------------------------
-*/
-
-function setText(id, value) {
+function setText(
+    id,
+    value
+) {
 
     const element =
         document.getElementById(id);
@@ -568,7 +639,9 @@ function setText(id, value) {
 }
 
 
-function formatCurrency(value) {
+function formatCurrency(
+    value
+) {
 
     const number =
         Number(value);
@@ -597,7 +670,9 @@ function formatCurrency(value) {
 }
 
 
-function formatSignedCurrency(value) {
+function formatSignedCurrency(
+    value
+) {
 
     const number =
         Number(value);
@@ -655,5 +730,544 @@ function calculatePercentage(
             maximumFractionDigits: 1
         }
     )}%`;
+
+}
+
+/* DATI MANUALI */
+
+function initializeManualValues() {
+
+    const fields = {
+
+        ddt: document.getElementById(
+            "manual-ddt"
+        ),
+
+        creditNotes: document.getElementById(
+            "manual-credit-notes"
+        )
+
+    };
+
+
+    const stored =
+        getStoredManualValues();
+
+
+    if (fields.ddt) {
+
+        fields.ddt.value =
+            stored.ddt
+                ? formatInputCurrency(stored.ddt)
+                : "";
+
+    }
+
+
+    if (fields.creditNotes) {
+
+        fields.creditNotes.value =
+            stored.creditNotes
+                ? formatInputCurrency(stored.creditNotes)
+                : "";
+
+    }
+
+
+    Object.values(fields).forEach(
+        field => {
+
+            if (!field) {
+                return;
+            }
+
+
+            /*
+             * Durante la digitazione NON formattiamo
+             * il campo. L'utente deve poter scrivere
+             * normalmente senza che il cursore venga
+             * spostato o che vengano persi caratteri.
+             */
+
+            field.addEventListener(
+                "input",
+                () => {
+
+                    saveManualValues();
+
+                }
+            );
+
+
+            /*
+             * Quando l'utente esce dal campo,
+             * applichiamo il formato italiano.
+             */
+
+            field.addEventListener(
+                "blur",
+                () => {
+
+                    const value =
+                        parseInputCurrency(
+                            field.value
+                        );
+
+
+                    field.value =
+                        value > 0
+                            ? formatInputCurrency(value)
+                            : "";
+
+
+                    saveManualValues();
+
+                }
+            );
+
+        }
+    );
+
+
+    updateProjectionTotals();
+
+}
+
+
+function getStoredManualValues() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(
+                "budget-manual-values"
+            )
+        ) || {};
+
+    } catch (error) {
+
+        console.error(
+            "Errore lettura dati manuali:",
+            error
+        );
+
+        return {};
+
+    }
+
+}
+
+
+function updateProjectionTotals() {
+
+    const ddt =
+        parseInputCurrency(
+            document.getElementById(
+                "manual-ddt"
+            )?.value
+        );
+
+
+    const creditNotes =
+        parseInputCurrency(
+            document.getElementById(
+                "manual-credit-notes"
+            )?.value
+        );
+
+
+    /*
+     * Le note di credito vengono inserite
+     * come valore positivo dall'utente,
+     * ma vengono sottratte dalla proiezione.
+     */
+
+    const manualTotal =
+        ddt -
+        creditNotes;
+
+
+    const certain =
+        getProjectionValue(
+            "projection-certain"
+        );
+
+
+    const probable =
+        getProjectionValue(
+            "projection-probable"
+        );
+
+
+    const portfolio =
+        getProjectionValue(
+            "projection-portfolio"
+        );
+
+
+    const backlog =
+        getProjectionValue(
+            "projection-backlog"
+        );
+
+
+    const total =
+        manualTotal +
+        certain +
+        probable +
+        portfolio +
+        backlog;
+
+
+    setText(
+        "projection-total",
+        formatCurrency(total)
+    );
+
+
+    updateDashboardMetrics(
+        total
+    );
+
+}
+
+
+function getInputNumber(id) {
+
+    const element =
+        document.getElementById(id);
+
+
+    if (!element) {
+
+        return 0;
+
+    }
+
+
+    const value =
+        Number(
+            element.value
+        );
+
+
+    if (
+        !Number.isFinite(value) ||
+        value < 0
+    ) {
+
+        return 0;
+
+    }
+
+
+    return value;
+
+}
+
+
+function updateProjectionTotals() {
+
+    const ddt =
+        getInputNumber(
+            "manual-ddt"
+        );
+
+
+    const invoices =
+        getInputNumber(
+            "manual-invoices"
+        );
+
+
+    const creditNotes =
+        getInputNumber(
+            "manual-credit-notes"
+        );
+
+
+    /*
+     * Le note di credito vengono inserite
+     * come valore positivo dall'utente,
+     * ma vengono sottratte dal totale.
+     */
+
+    const manualTotal =
+        ddt +
+        invoices -
+        creditNotes;
+
+
+    const certain =
+        getProjectionValue(
+            "projection-certain"
+        );
+
+
+    const probable =
+        getProjectionValue(
+            "projection-probable"
+        );
+
+
+    const portfolio =
+        getProjectionValue(
+            "projection-portfolio"
+        );
+
+
+    const backlog =
+        getProjectionValue(
+            "projection-backlog"
+        );
+
+
+    const total =
+        manualTotal +
+        certain +
+        probable +
+        portfolio +
+        backlog;
+
+
+    setText(
+        "projection-total",
+        formatCurrency(total)
+    );
+
+
+    updateDashboardMetrics(
+        total
+    );
+
+}
+
+
+function getProjectionValue(id) {
+
+    const element =
+        document.getElementById(id);
+
+
+    if (!element) {
+
+        return 0;
+
+    }
+
+
+    const value =
+        element.dataset.value;
+
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return 0;
+
+    }
+
+
+    const number =
+        Number(value);
+
+
+    return Number.isFinite(number)
+        ? number
+        : 0;
+
+}
+
+function parseInputCurrency(value) {
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+
+        return 0;
+
+    }
+
+
+    let text =
+        String(value)
+            .trim()
+            .replace(/\s/g, "")
+            .replace(/€/g, "");
+
+
+    /*
+     * Gestione formato italiano:
+     *
+     * 12.500,50
+     * 12500,50
+     * 12500.50
+     */
+
+    if (
+        text.includes(",")
+    ) {
+
+        text =
+            text
+                .replace(/\./g, "")
+                .replace(",", ".");
+
+    }
+
+
+    const number =
+        Number(text);
+
+
+    if (
+        !Number.isFinite(number) ||
+        number < 0
+    ) {
+
+        return 0;
+
+    }
+
+
+    return number;
+
+}
+
+
+function formatInputCurrency(value) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        !Number.isFinite(number) ||
+        number <= 0
+    ) {
+
+        return "";
+
+    }
+
+
+    return number.toLocaleString(
+        "it-IT",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+}
+
+
+function formatManualInput(input) {
+
+    let value =
+        input.value;
+
+
+    /*
+     * Manteniamo soltanto numeri,
+     * punto e virgola.
+     */
+
+    value =
+        value.replace(
+            /[^\d.,]/g,
+            ""
+        );
+
+
+    if (!value) {
+
+        input.value = "";
+
+        return;
+
+    }
+
+
+    /*
+     * Se l'utente sta scrivendo la parte
+     * decimale, la conserviamo.
+     */
+
+    const hasComma =
+        value.includes(",");
+
+
+    let integerPart =
+        value.split(",")[0];
+
+
+    let decimalPart =
+        hasComma
+            ? value.split(",").slice(1).join("")
+            : "";
+
+
+    /*
+     * Il punto viene considerato come
+     * separatore delle migliaia.
+     */
+
+    integerPart =
+        integerPart.replace(
+            /\./g,
+            ""
+        );
+
+
+    integerPart =
+        integerPart.replace(
+            /^0+(?=\d)/,
+            ""
+        );
+
+
+    if (!integerPart) {
+
+        integerPart = "0";
+
+    }
+
+
+    /*
+     * Formattazione delle migliaia.
+     */
+
+    const formattedInteger =
+        Number(integerPart)
+            .toLocaleString(
+                "it-IT"
+            );
+
+
+    if (hasComma) {
+
+        decimalPart =
+            decimalPart
+                .replace(
+                    /[^\d]/g,
+                    ""
+                )
+                .slice(0, 2);
+
+
+        input.value =
+            `${formattedInteger},${decimalPart}`;
+
+    } else {
+
+        input.value =
+            formattedInteger;
+
+    }
 
 }

@@ -81,15 +81,17 @@ const REQUIRED_EXCEL_COLUMNS = [
 
 function initializeExcelImport() {
 
-    const fileInput = document.getElementById("excel-file");
+    const fileInput =
+        document.getElementById("excel-file");
 
-    const dropZone = document.getElementById("drop-zone");
+    const dropZone =
+        document.getElementById("drop-zone");
 
 
-    if (!fileInput || !dropZone) {
+    if (!fileInput) {
 
         console.error(
-            "Elementi per l'importazione Excel non trovati."
+            "Input Excel #excel-file non trovato."
         );
 
         return;
@@ -98,74 +100,98 @@ function initializeExcelImport() {
 
 
     /*
-    |----------------------------------------------------------------------
-    | Selezione tramite pulsante
-    |----------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    | Importazione tramite selezione file
+    |--------------------------------------------------------------------------
     */
 
-    fileInput.addEventListener("change", (event) => {
+    fileInput.addEventListener(
+        "change",
+        (event) => {
 
-        const file = event.target.files[0];
+            const file =
+                event.target.files[0];
 
-        if (file) {
+            if (file) {
 
-            processExcelFile(file);
+                processExcelFile(file);
+
+            }
 
         }
-
-    });
+    );
 
 
     /*
-    |----------------------------------------------------------------------
-    | Drag & drop
-    |----------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    | Drag & Drop
+    |--------------------------------------------------------------------------
+    |
+    | Il drag & drop è opzionale.
+    | Se il drop-zone non esiste nell'interfaccia,
+    | l'importazione tramite pulsante continua comunque a funzionare.
+    |
+    |--------------------------------------------------------------------------
     */
 
-    dropZone.addEventListener("dragover", (event) => {
+    if (dropZone) {
 
-        event.preventDefault();
+        dropZone.addEventListener(
+            "dragover",
+            (event) => {
 
-        event.stopPropagation();
+                event.preventDefault();
 
-        dropZone.classList.add("dragover");
+                dropZone.classList.add(
+                    "dragover"
+                );
 
-    });
-
-
-    dropZone.addEventListener("dragleave", (event) => {
-
-        event.preventDefault();
-
-        event.stopPropagation();
-
-        dropZone.classList.remove("dragover");
-
-    });
+            }
+        );
 
 
-    dropZone.addEventListener("drop", (event) => {
+        dropZone.addEventListener(
+            "dragleave",
+            () => {
 
-        event.preventDefault();
+                dropZone.classList.remove(
+                    "dragover"
+                );
 
-        event.stopPropagation();
-
-        dropZone.classList.remove("dragover");
-
-
-        const files = event.dataTransfer.files;
-
-
-        if (!files || files.length === 0) {
-
-            return;
-
-        }
+            }
+        );
 
 
-        processExcelFile(files[0]);
+        dropZone.addEventListener(
+            "drop",
+            (event) => {
 
-    });
+                event.preventDefault();
+
+                dropZone.classList.remove(
+                    "dragover"
+                );
+
+
+                const file =
+                    event.dataTransfer.files[0];
+
+
+                if (file) {
+
+                    processExcelFile(file);
+
+                }
+
+            }
+        );
+
+    }
+
+
+    console.log(
+        "Importazione Excel inizializzata."
+    );
 
 }
 
