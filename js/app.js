@@ -21,11 +21,17 @@ function initializeApplication() {
 
     initializeManualValues();
 
+    initializeUnblockedProbability();
+
+    initializeDivisionFilter();
+
     initializeExcelImport();
 
     updateDashboardBudget();
 
     updateAnnualBudgetTotal();
+
+    initializeMonthFilter();
 
     console.log(
         "Budget inizializzato."
@@ -551,7 +557,7 @@ function getCurrentMonth() {
 
 /* METRICHE */
 
-function updateDashboardMetrics() {
+function updateDashboardMetrics(projectionTotal = 0) {
 
     const budget =
         getStoredBudgets()[
@@ -560,11 +566,11 @@ function updateDashboardMetrics() {
 
 
     const realized =
-        0;
+        Number(projectionTotal) || 0;
 
 
     const projection =
-        0;
+        Number(projectionTotal) || 0;
 
 
     const gap =
@@ -737,155 +743,286 @@ function calculatePercentage(
 
 function initializeManualValues() {
 
-    const fields = {
+    const ddtField =
+        document.getElementById("manual-ddt");
 
-        ddt: document.getElementById(
-            "manual-ddt"
-        ),
-
-        creditNotes: document.getElementById(
-            "manual-credit-notes"
-        )
-
-    };
+    const creditNotesField =
+        document.getElementById("manual-credit-notes");
 
 
-    const stored =
-        getStoredManualValues();
+    /*
+    |--------------------------------------------------------------------------
+    | RESET INIZIALE
+    |--------------------------------------------------------------------------
+    |
+    | DDT Emessi e Note di credito sono valori temporanei.
+    |
+    | Ad ogni caricamento della pagina partono da zero
+    | e NON vengono recuperati dal localStorage.
+    |
+    |--------------------------------------------------------------------------
+    */
 
+    if (ddtField) {
 
-    if (fields.ddt) {
-
-        fields.ddt.value =
-            stored.ddt
-                ? formatInputCurrency(stored.ddt)
-                : "";
-
-    }
-
-
-    if (fields.creditNotes) {
-
-        fields.creditNotes.value =
-            stored.creditNotes
-                ? formatInputCurrency(stored.creditNotes)
-                : "";
+        ddtField.value = "";
 
     }
 
 
-    Object.values(fields).forEach(
-        field => {
+    if (creditNotesField) {
 
-            if (!field) {
-                return;
+        creditNotesField.value = "";
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DDT EMESSI
+    |--------------------------------------------------------------------------
+    */
+
+    if (ddtField) {
+
+        ddtField.addEventListener(
+            "input",
+            function () {
+
+                updateProjectionTotals();
+
             }
+        );
 
 
-            /*
-             * Durante la digitazione NON formattiamo
-             * il campo. L'utente deve poter scrivere
-             * normalmente senza che il cursore venga
-             * spostato o che vengano persi caratteri.
-             */
+        ddtField.addEventListener(
+            "blur",
+            function () {
 
-            field.addEventListener(
-                "input",
-                () => {
-
-                    saveManualValues();
-
-                }
-            );
+                const value =
+                    parseInputCurrency(
+                        ddtField.value
+                    );
 
 
-            /*
-             * Quando l'utente esce dal campo,
-             * applichiamo il formato italiano.
-             */
-
-            field.addEventListener(
-                "blur",
-                () => {
-
-                    const value =
-                        parseInputCurrency(
-                            field.value
-                        );
+                ddtField.value =
+                    value > 0
+                        ? formatInputCurrency(value)
+                        : "";
 
 
-                    field.value =
-                        value > 0
-                            ? formatInputCurrency(value)
-                            : "";
+                updateProjectionTotals();
+
+            }
+        );
+
+    }
 
 
-                    saveManualValues();
+    /*
+    |--------------------------------------------------------------------------
+    | NOTE DI CREDITO
+    |--------------------------------------------------------------------------
+    */
 
-                }
-            );
+    if (creditNotesField) {
 
-        }
-    );
+        creditNotesField.addEventListener(
+            "input",
+            function () {
 
+                updateProjectionTotals();
+
+            }
+        );
+
+
+        creditNotesField.addEventListener(
+            "blur",
+            function () {
+
+                const value =
+                    parseInputCurrency(
+                        creditNotesField.value
+                    );
+
+
+                creditNotesField.value =
+                    value > 0
+                        ? formatInputCurrency(value)
+                        : "";
+
+
+                updateProjectionTotals();
+
+            }
+        );
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CALCOLO INIZIALE
+    |--------------------------------------------------------------------------
+    */
 
     updateProjectionTotals();
 
 }
 
+function updateProjectionTotals() {
 
-function getStoredManualValues() {
+    /*
+    |--------------------------------------------------------------------------
+    | VALORI MANUALI
+    |--------------------------------------------------------------------------
+    */
 
-    try {
-
-        return JSON.parse(
-            localStorage.getItem(
-                "budget-manual-values"
-            )
-        ) || {};
-
-    } catch (error) {
-
-        console.error(
-            "Errore lettura dati manuali:",
-            error
+    const ddtField =
+        document.getElementById(
+            "manual-ddt"
         );
 
-        return {};
 
-    }
+    const creditNotesField =
+        document.getElementById(
+            "manual-credit-notes"
+        );
 
-}
-
-
-function updateProjectionTotals() {
 
     const ddt =
         parseInputCurrency(
-            document.getElementById(
-                "manual-ddt"
-            )?.value
+            ddtField
+                ? ddtField.value
+                : ""
         );
 
 
     const creditNotes =
         parseInputCurrency(
-            document.getElementById(
-                "manual-credit-notes"
-            )?.value
+            creditNotesField
+                ? creditNotesField.value
+                : ""
         );
 
 
     /*
-     * Le note di credito vengono inserite
-     * come valore positivo dall'utente,
-     * ma vengono sottratte dalla proiezione.
-     */
+    |--------------------------------------------------------------------------
+    | F.I.S.E.
+    |--------------------------------------------------------------------------
+    */
 
-    const manualTotal =
-        ddt -
-        creditNotes;
+    const fise =
+        Number(
+            budgetData.fiseValue || 0
+        );
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | ORDINI SBLOCCATI
+    |--------------------------------------------------------------------------
+    */
+
+    const unblocked =
+        Number(
+            budgetData.unblockedValue || 0
+        );
+
+
+    const unblockedProbabilityField =
+        document.getElementById(
+            "unblocked-probability"
+        );
+
+
+    const unblockedProbability =
+        parseProbability(
+            unblockedProbabilityField
+                ? unblockedProbabilityField.value
+                : ""
+        );
+
+
+    const unblockedProjected =
+        unblocked *
+        (
+            unblockedProbability / 100
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ORDINI BLOCCATI ITALIA
+    |--------------------------------------------------------------------------
+    */
+
+    const blockedItaly =
+        Number(
+            budgetData.blockedItalyValue || 0
+        );
+
+
+    const blockedItalyProbabilityField =
+        document.getElementById(
+            "blocked-italy-probability"
+        );
+
+
+    const blockedItalyProbability =
+        parseProbability(
+            blockedItalyProbabilityField
+                ? blockedItalyProbabilityField.value
+                : ""
+        );
+
+
+    const blockedItalyProjected =
+        blockedItaly *
+        (
+            blockedItalyProbability / 100
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ORDINI BLOCCATI ESTERO
+    |--------------------------------------------------------------------------
+    */
+
+    const blockedForeign =
+        Number(
+            budgetData.blockedForeignValue || 0
+        );
+
+
+    const blockedForeignProbabilityField =
+        document.getElementById(
+            "blocked-foreign-probability"
+        );
+
+
+    const blockedForeignProbability =
+        parseProbability(
+            blockedForeignProbabilityField
+                ? blockedForeignProbabilityField.value
+                : ""
+        );
+
+
+    const blockedForeignProjected =
+        blockedForeign *
+        (
+            blockedForeignProbability / 100
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ALTRE COMPONENTI
+    |--------------------------------------------------------------------------
+    */
 
     const certain =
         getProjectionValue(
@@ -911,13 +1048,30 @@ function updateProjectionTotals() {
         );
 
 
-    const total =
-        manualTotal +
-        certain +
-        probable +
-        portfolio +
-        backlog;
+    /*
+    |--------------------------------------------------------------------------
+    | TOTALE
+    |--------------------------------------------------------------------------
+    */
 
+    const total =
+        ddt
+        - creditNotes
+        - fise
+        + unblockedProjected
+        + blockedItalyProjected
+        + blockedForeignProjected
+        + certain
+        + probable
+        + portfolio
+        + backlog;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | AGGIORNA TOTALE
+    |--------------------------------------------------------------------------
+    */
 
     setText(
         "projection-total",
@@ -925,12 +1079,55 @@ function updateProjectionTotals() {
     );
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | AGGIORNA DASHBOARD
+    |--------------------------------------------------------------------------
+    */
+
     updateDashboardMetrics(
         total
     );
 
 }
 
+function getStoredManualValues() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(
+                "budget-manual-values"
+            )
+        ) || {};
+
+    } catch (error) {
+
+        console.error(
+            "Errore lettura dati manuali:",
+            error
+        );
+
+        return {};
+
+    }
+
+}
+
+function saveManualValuesDirectly() {
+
+    /*
+    |--------------------------------------------------------------------------
+    | DDT e Note di credito sono valori temporanei.
+    |
+    | NON vengono salvati nel localStorage.
+    | Rimangono validi solo durante la sessione corrente.
+    |--------------------------------------------------------------------------
+    */
+
+    updateProjectionTotals();
+
+}
 
 function getInputNumber(id) {
 
@@ -965,82 +1162,6 @@ function getInputNumber(id) {
 
 }
 
-
-function updateProjectionTotals() {
-
-    const ddt =
-        getInputNumber(
-            "manual-ddt"
-        );
-
-
-    const invoices =
-        getInputNumber(
-            "manual-invoices"
-        );
-
-
-    const creditNotes =
-        getInputNumber(
-            "manual-credit-notes"
-        );
-
-
-    /*
-     * Le note di credito vengono inserite
-     * come valore positivo dall'utente,
-     * ma vengono sottratte dal totale.
-     */
-
-    const manualTotal =
-        ddt +
-        invoices -
-        creditNotes;
-
-
-    const certain =
-        getProjectionValue(
-            "projection-certain"
-        );
-
-
-    const probable =
-        getProjectionValue(
-            "projection-probable"
-        );
-
-
-    const portfolio =
-        getProjectionValue(
-            "projection-portfolio"
-        );
-
-
-    const backlog =
-        getProjectionValue(
-            "projection-backlog"
-        );
-
-
-    const total =
-        manualTotal +
-        certain +
-        probable +
-        portfolio +
-        backlog;
-
-
-    setText(
-        "projection-total",
-        formatCurrency(total)
-    );
-
-
-    updateDashboardMetrics(
-        total
-    );
-
-}
 
 
 function getProjectionValue(id) {
@@ -1138,7 +1259,6 @@ function parseInputCurrency(value) {
 
 }
 
-
 function formatInputCurrency(value) {
 
     const number =
@@ -1164,7 +1284,6 @@ function formatInputCurrency(value) {
     );
 
 }
-
 
 function formatManualInput(input) {
 
@@ -1269,5 +1388,279 @@ function formatManualInput(input) {
             formattedInteger;
 
     }
+
+}
+
+function initializeUnblockedProbability() {
+
+    const field =
+        document.getElementById(
+            "unblocked-probability"
+        );
+
+
+    if (!field) {
+
+        return;
+
+    }
+
+
+    const stored =
+        localStorage.getItem(
+            "budget-unblocked-probability"
+        );
+
+
+    if (stored !== null) {
+
+        field.value =
+            `${stored}%`;
+
+    }
+
+
+    field.addEventListener(
+        "input",
+        () => {
+
+            let value =
+                field.value
+                    .replace("%", "")
+                    .replace(",", ".")
+                    .replace(/[^\d.]/g, "");
+
+
+            if (value === "") {
+
+                field.value = "";
+
+                saveUnblockedProbability();
+
+                updateProjectionTotals();
+
+                return;
+
+            }
+
+
+            let number =
+                Number(value);
+
+
+            if (!Number.isFinite(number)) {
+
+                field.value = "";
+
+                return;
+
+            }
+
+
+            number =
+                Math.min(
+                    100,
+                    Math.max(
+                        0,
+                        number
+                    )
+                );
+
+
+            field.value =
+                `${number}%`;
+
+
+            saveUnblockedProbability();
+
+            updateProjectionTotals();
+
+        }
+    );
+
+
+    field.addEventListener(
+        "blur",
+        () => {
+
+            const value =
+                parseProbability(
+                    field.value
+                );
+
+
+            field.value =
+                `${value}%`;
+
+
+            saveUnblockedProbability();
+
+            updateProjectionTotals();
+
+        }
+    );
+
+}
+
+function parseProbability(value) {
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+
+        return 0;
+
+    }
+
+
+    const number =
+        Number(
+            String(value)
+                .replace("%", "")
+                .replace(",", ".")
+                .trim()
+        );
+
+
+    if (!Number.isFinite(number)) {
+
+        return 0;
+
+    }
+
+
+    return Math.min(
+        100,
+        Math.max(
+            0,
+            number
+        )
+    );
+
+}
+
+function saveUnblockedProbability() {
+
+    const field =
+        document.getElementById(
+            "unblocked-probability"
+        );
+
+
+    if (!field) {
+
+        return;
+
+    }
+
+
+    const value =
+        parseProbability(
+            field.value
+        );
+
+
+    localStorage.setItem(
+        "budget-unblocked-probability",
+        value
+    );
+
+}
+
+function initializeDivisionFilter() {
+
+    const field =
+        document.getElementById(
+            "division-filter"
+        );
+
+
+    if (!field) {
+
+        return;
+
+    }
+
+
+    field.value =
+        budgetData.divisioneSelezionata;
+
+
+    field.addEventListener(
+        "change",
+        () => {
+
+            budgetData.divisioneSelezionata =
+                field.value;
+
+
+            console.log(
+                "Divisione selezionata:",
+                field.value
+            );
+
+
+            calculateFiseValue();
+
+            calculateUnblockedValue();
+
+            updateProjectionTotals();
+
+        }
+    );
+
+}
+
+function initializeMonthFilter() {
+
+    const monthField =
+        document.getElementById(
+            "month-filter"
+        );
+
+
+    if (!monthField) {
+
+        return;
+
+    }
+
+
+    monthField.value =
+        budgetData.meseSelezionato;
+
+
+    monthField.addEventListener(
+        "change",
+        function () {
+
+            budgetData.meseSelezionato =
+                monthField.value;
+
+
+            console.log(
+                "Mese selezionato:",
+                budgetData.meseSelezionato
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Ricalcolo completo
+            |--------------------------------------------------------------------------
+            */
+
+            calculateFiseValue();
+
+            calculateUnblockedValue();
+
+            calculateBlockedOrders();
+
+            updateProjectionTotals();
+
+        }
+    );
 
 }

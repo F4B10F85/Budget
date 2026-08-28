@@ -192,6 +192,73 @@
 
                         </div>
 
+                        <div class="projection-row automatic-row">
+
+                            <label for="division-filter">
+                                Divisione
+                            </label>
+
+                            <div class="automatic-value">
+
+                                <select
+                                    id="division-filter"
+                                    class="division-select"
+                                >
+
+                                    <option value="all">
+                                        Tutte
+                                    </option>
+
+                                    <option value="1">
+                                        Kep Italia
+                                    </option>
+
+                                    <option value="2">
+                                        Veredus
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="projection-row automatic-row">
+
+                            <label for="month-filter">
+                                Mese
+                            </label>
+
+                            <div class="automatic-value">
+
+                                <select
+                                    id="month-filter"
+                                    class="division-select"
+                                >
+
+                                    <option value="all">
+                                        Tutti
+                                    </option>
+
+                                    <option value="1">Gennaio</option>
+                                    <option value="2">Febbraio</option>
+                                    <option value="3">Marzo</option>
+                                    <option value="4">Aprile</option>
+                                    <option value="5">Maggio</option>
+                                    <option value="6">Giugno</option>
+                                    <option value="7">Luglio</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Settembre</option>
+                                    <option value="10">Ottobre</option>
+                                    <option value="11">Novembre</option>
+                                    <option value="12">Dicembre</option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
 
                         <div class="projection-row manual-row">
 
@@ -234,28 +301,127 @@
                         </div>
 
 
-                            <div class="projection-row">
+                        <div class="projection-row automatic-row negative">
 
-                                <span>
-                                    Ordini sbloccati
-                                </span>
+                            <label for="automatic-fise">
+                                F.I.S.E.
+                            </label>
 
-                                <strong id="projection-certain">
-                                    € 0,00
+                            <div class="automatic-value">
+                                <span>€</span>
+
+                                <strong id="automatic-fise">
+                                    0,00
                                 </strong>
+                            </div>
+
+                        </div>
+
+
+                           <div class="projection-row automatic-row">
+
+                                <label for="automatic-unblocked">
+                                    Ordini sbloccati
+                                </label>
+
+                                <div class="projection-value-with-probability">
+
+                                    <div class="probability-box">
+
+                                        <input
+                                            id="unblocked-probability"
+                                            type="text"
+                                            inputmode="decimal"
+                                            autocomplete="off"
+                                            placeholder="0%"
+                                            maxlength="4"
+                                        >
+
+                                    </div>
+
+                                    <div class="automatic-value">
+
+                                        <span>€</span>
+
+                                        <strong id="automatic-unblocked">
+                                            0,00
+                                        </strong>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
 
-                            <div class="projection-row">
+                            <div class="projection-row automatic-row">
 
-                                <span>
-                                    Ordini bloccati
-                                </span>
+                                <label for="automatic-blocked-italy">
+                                    Ordini bloccati Italia
+                                </label>
 
-                                <strong id="projection-probable">
-                                    € 0,00
-                                </strong>
+                                <div class="projection-value-with-probability">
+
+                                    <div class="probability-box">
+
+                                        <input
+                                            id="blocked-italy-probability"
+                                            type="text"
+                                            inputmode="decimal"
+                                            autocomplete="off"
+                                            placeholder="0%"
+                                            maxlength="4"
+                                        >
+
+                                    </div>
+
+                                    <div class="automatic-value">
+
+                                        <span>€</span>
+
+                                        <strong id="automatic-blocked-italy">
+                                            0,00
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="projection-row automatic-row">
+
+                                <label for="automatic-blocked-foreign">
+                                    Ordini bloccati Estero
+                                </label>
+
+                                <div class="projection-value-with-probability">
+
+                                    <div class="probability-box">
+
+                                        <input
+                                            id="blocked-foreign-probability"
+                                            type="text"
+                                            inputmode="decimal"
+                                            autocomplete="off"
+                                            placeholder="0%"
+                                            maxlength="4"
+                                        >
+
+                                    </div>
+
+                                    <div class="automatic-value">
+
+                                        <span>€</span>
+
+                                        <strong id="automatic-blocked-foreign">
+                                            0,00
+                                        </strong>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 

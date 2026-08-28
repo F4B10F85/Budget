@@ -25,6 +25,7 @@
 */
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Struttura dati principale
@@ -41,12 +42,157 @@ let budgetData = {
 
     budget: [],
 
+    fiseValue: 0,
+
+    unblockedValue: 0,
+
+    blockedItalyValue: 0,
+
+    blockedForeignValue: 0,
+
+    divisioneSelezionata: "all",
+
+    meseSelezionato: "all",
+
     sourceFile: null,
 
     importedAt: null
 
 };
 
+
+function getDivisionLabel(value) {
+
+    const divisione =
+        String(value ?? "").trim();
+
+    if (divisione === "1") {
+
+        return "Kep Italia";
+
+    }
+
+    if (divisione === "2") {
+
+        return "Veredus";
+
+    }
+
+    return "";
+
+}
+
+function getFilteredBudgetRows() {
+
+    const rows =
+        Array.isArray(budgetData.extraction)
+            ? budgetData.extraction
+            : [];
+
+
+    return rows.filter(row => {
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO DIVISIONE
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            budgetData.divisioneSelezionata !== "all"
+        ) {
+
+            const divisione =
+                String(
+                    row.divisione ?? ""
+                ).trim();
+
+
+            if (
+                divisione !==
+                budgetData.divisioneSelezionata
+            ) {
+
+                return false;
+
+            }
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO MESE
+        |--------------------------------------------------------------------------
+        |
+        | Il mese selezionato rappresenta una DATA LIMITE.
+        |
+        | Agosto = tutto fino al 31/08
+        | Aprile = tutto fino al 30/04
+        |
+        | Non filtriamo quindi "dentro il mese".
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            budgetData.meseSelezionato !== "all"
+        ) {
+
+            const mese =
+                Number(
+                    budgetData.meseSelezionato
+                );
+
+
+            const dataConsegna =
+                row.dataConsegna;
+
+
+            if (
+                !(dataConsegna instanceof Date) ||
+                Number.isNaN(
+                    dataConsegna.getTime()
+                )
+            ) {
+
+                return false;
+
+            }
+
+
+            const anno =
+                dataConsegna.getFullYear();
+
+
+            const ultimoGiorno =
+                new Date(
+                    anno,
+                    mese,
+                    0,
+                    23,
+                    59,
+                    59,
+                    999
+                );
+
+
+            if (
+                dataConsegna >
+                ultimoGiorno
+            ) {
+
+                return false;
+
+            }
+
+        }
+
+
+        return true;
+
+    });
+
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -340,17 +486,16 @@ function processExcelFile(file) {
             |------------------------------------------------------------------
             */
 
-            budgetData.extraction = normalizedRows;
+            budgetData.extraction =
+                normalizedRows;
 
-            budgetData.sourceFile = file.name;
+            budgetData.sourceFile =
+                file.name;
 
-            budgetData.importedAt = new Date();
+            budgetData.importedAt =
+                new Date();
 
-
-            console.log(
-                "Dati importati:",
-                budgetData.extraction
-            );
+            processImportedData(file.name);
 
 
             /*
@@ -359,9 +504,7 @@ function processExcelFile(file) {
             |------------------------------------------------------------------
             */
 
-            processImportedData();
-
-
+           
         } catch (error) {
 
             console.error(
@@ -459,10 +602,14 @@ function normalizeExcelRow(row) {
             row["Articolo"],
 
         quantitaOrdinata:
-            toNumber(row["Quantità ordinato"]),
+            toNumber(
+                row["Quantità ordinato"]
+            ),
 
         quantitaSaldo:
-            toNumber(row["Quantità saldo"]),
+            toNumber(
+                row["Quantità saldo"]
+            ),
 
         linea:
             row["Linea"],
@@ -474,10 +621,14 @@ function normalizeExcelRow(row) {
             row["BloccaEvasione*"],
 
         valore:
-            toNumber(row["ImponibileSaldo"]),
+            toNumber(
+                row["ImponibileSaldo"]
+            ),
 
         dataConsegna:
-            normalizeDate(row["Data consegna"]),
+            normalizeDate(
+                row["Data consegna"]
+            ),
 
         stato:
             row["DesStato*"],
@@ -601,41 +752,22 @@ function normalizeDate(value) {
 |--------------------------------------------------------------------------
 */
 
-function processImportedData() {
-
-    const count =
-        budgetData.extraction.length;
-
+function processImportedData(fileName) {
 
     console.log(
-        `Importazione completata: ${count} righe.`
+        `Elaborazione del file ${fileName || budgetData.sourceFile} completata.`
     );
 
+
+    calculateFiseValue();
+
+    calculateUnblockedValue();
+
+    calculateBlockedOrders();
 
     updateImportSummary();
 
     renderImportedOrders();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Analisi automatica del portafoglio
-    |--------------------------------------------------------------------------
-    */
-
-    const analysis =
-        analyzePortfolio();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Aggiornamento dashboard
-    |--------------------------------------------------------------------------
-    */
-
-    updateDashboardFromAnalysis(
-        analysis
-    );
 
 }
 
@@ -756,5 +888,522 @@ function formatDate(value) {
 
 
     return String(value);
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Calcolo F.I.S.E.
+|--------------------------------------------------------------------------
+|
+| Cerca nel campo normalizzato "cliente" tutte le righe la cui
+| Ragione sociale originale inizia con "F.I.S.E."
+|
+| Il valore da sommare è il campo normalizzato "valore",
+| derivato dalla colonna Excel "ImponibileSaldo".
+|
+|--------------------------------------------------------------------------
+*/
+
+function calculateFiseValue() {
+
+    const rows =
+        getFilteredBudgetRows();
+
+    budgetData.fiseValue = 0;
+
+
+    if (
+        !Array.isArray(rows) ||
+        rows.length === 0
+    ) {
+
+        budgetData.fiseValue = 0;
+
+        updateFiseDisplay();
+
+        return;
+
+    }
+
+
+    let total = 0;
+
+    let matchingRows = 0;
+
+
+    rows.forEach(row => {
+
+        const cliente =
+            String(
+                row.cliente ?? ""
+            )
+            .trim();
+
+
+        if (!cliente) {
+
+            return;
+
+        }
+
+
+        if (
+            !cliente
+                .toUpperCase()
+                .startsWith("F.I.S.E.")
+        ) {
+
+            return;
+
+        }
+
+
+        const valore =
+            Number(
+                row.valore || 0
+            );
+
+
+        if (
+            Number.isFinite(valore)
+        ) {
+
+            total += valore;
+
+        }
+
+
+        matchingRows++;
+
+    });
+
+
+    budgetData.fiseValue =
+        total;
+
+
+    console.log(
+        "Righe F.I.S.E. trovate:",
+        matchingRows
+    );
+
+
+    console.log(
+        "Valore F.I.S.E.:",
+        total
+    );
+
+
+    updateFiseDisplay();
+
+}
+
+function parseExcelCurrency(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+
+        return 0;
+
+    }
+
+
+    if (
+        typeof value === "number"
+    ) {
+
+        return Number.isFinite(value)
+            ? value
+            : 0;
+
+    }
+
+
+    let text =
+        String(value)
+            .trim()
+            .replace(/\s/g, "")
+            .replace(/€/g, "");
+
+
+    if (
+        text.includes(",")
+    ) {
+
+        text =
+            text
+                .replace(/\./g, "")
+                .replace(",", ".");
+
+    }
+
+
+    const number =
+        Number(text);
+
+
+    return Number.isFinite(number)
+        ? number
+        : 0;
+
+}
+
+
+function updateFiseDisplay() {
+
+    const element =
+        document.getElementById(
+            "automatic-fise"
+        );
+
+
+    if (element) {
+
+        const value =
+            Number(
+                budgetData.fiseValue || 0
+            );
+
+
+        element.textContent =
+            value.toLocaleString(
+                "it-IT",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+
+    }
+
+
+    if (
+        typeof updateProjectionTotals ===
+        "function"
+    ) {
+
+        updateProjectionTotals();
+
+    }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Calcolo Ordini sbloccati
+|--------------------------------------------------------------------------
+|
+| Cerca tutte le righe in cui:
+|
+| BloccaEvasione* = "No"
+|
+| e somma il campo normalizzato "valore",
+| derivato da "ImponibileSaldo".
+|
+|--------------------------------------------------------------------------
+*/
+
+function calculateUnblockedValue() {
+
+    const rows =
+        getFilteredBudgetRows();
+
+    budgetData.unblockedValue = 0;
+
+    if (
+        !Array.isArray(rows) ||
+        rows.length === 0
+    ) {
+
+        updateUnblockedDisplay();
+
+        return;
+
+    }
+
+    let total = 0;
+    let matchingRows = 0;
+
+    rows.forEach(row => {
+
+        const bloccaEvasione =
+            String(
+                row.bloccaEvasione ?? ""
+            )
+            .trim()
+            .toUpperCase();
+
+        if (
+            bloccaEvasione !== "NO"
+        ) {
+
+            return;
+
+        }
+
+        const valore =
+            Number(
+                row.valore || 0
+            );
+
+        if (
+            Number.isFinite(valore)
+        ) {
+
+            total += valore;
+
+        }
+
+        matchingRows++;
+
+    });
+
+    budgetData.unblockedValue =
+        total;
+
+    console.log(
+        "Righe Ordini sbloccati:",
+        matchingRows
+    );
+
+    console.log(
+        "Valore Ordini sbloccati:",
+        total
+    );
+
+    updateUnblockedDisplay();
+
+}
+
+function calculateBlockedOrders() {
+
+    const rows =
+        getFilteredBudgetRows();
+
+
+    budgetData.blockedItalyValue = 0;
+
+    budgetData.blockedForeignValue = 0;
+
+
+    if (
+        !Array.isArray(rows) ||
+        rows.length === 0
+    ) {
+
+        updateBlockedOrdersDisplay();
+
+        return;
+
+    }
+
+
+    let italyTotal = 0;
+
+    let foreignTotal = 0;
+
+
+    rows.forEach(row => {
+
+        const bloccaEvasione =
+            String(
+                row.bloccaEvasione ?? ""
+            )
+            .trim()
+            .toUpperCase();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Consideriamo soltanto gli ordini BLOCCATI
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            bloccaEvasione === "NO"
+        ) {
+
+            return;
+
+        }
+
+
+        const valore =
+            Number(
+                row.valore || 0
+            );
+
+
+        if (
+            !Number.isFinite(valore)
+        ) {
+
+            return;
+
+        }
+
+
+        const stato =
+            String(
+                row.stato ?? ""
+            )
+            .trim()
+            .toUpperCase();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ITALIA
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            stato === "ITALIA"
+        ) {
+
+            italyTotal += valore;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ESTERO
+        |--------------------------------------------------------------------------
+        |
+        | Tutto ciò che NON è ITALIA.
+        |--------------------------------------------------------------------------
+        */
+
+        else {
+
+            foreignTotal += valore;
+
+        }
+
+    });
+
+
+    budgetData.blockedItalyValue =
+        italyTotal;
+
+
+    budgetData.blockedForeignValue =
+        foreignTotal;
+
+
+    console.log(
+        "Ordini bloccati Italia:",
+        italyTotal
+    );
+
+
+    console.log(
+        "Ordini bloccati Estero:",
+        foreignTotal
+    );
+
+
+    updateBlockedOrdersDisplay();
+
+}
+
+function updateBlockedOrdersDisplay() {
+
+    const italyElement =
+        document.getElementById(
+            "automatic-blocked-italy"
+        );
+
+
+    const foreignElement =
+        document.getElementById(
+            "automatic-blocked-foreign"
+        );
+
+
+    if (italyElement) {
+
+        italyElement.textContent =
+            Number(
+                budgetData.blockedItalyValue || 0
+            ).toLocaleString(
+                "it-IT",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+
+    }
+
+
+    if (foreignElement) {
+
+        foreignElement.textContent =
+            Number(
+                budgetData.blockedForeignValue || 0
+            ).toLocaleString(
+                "it-IT",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+
+    }
+
+
+    if (
+        typeof updateProjectionTotals ===
+        "function"
+    ) {
+
+        updateProjectionTotals();
+
+    }
+
+}
+
+function updateUnblockedDisplay() {
+
+    const element =
+        document.getElementById(
+            "automatic-unblocked"
+        );
+
+
+    if (element) {
+
+        const value =
+            Number(
+                budgetData.unblockedValue || 0
+            );
+
+
+        element.textContent =
+            value.toLocaleString(
+                "it-IT",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+
+    }
+
+
+    if (
+        typeof updateProjectionTotals ===
+        "function"
+    ) {
+
+        updateProjectionTotals();
+
+    }
 
 }

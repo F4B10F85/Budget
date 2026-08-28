@@ -70,15 +70,7 @@ function updateDashboardFromAnalysis(analysis) {
 
     /*
     |--------------------------------------------------------------------------
-    | Per ora la proiezione coincide con il portafoglio disponibile.
-    |
-    | Questa è una situazione temporanea.
-    |
-    | Successivamente il motore separerà:
-    | - realizzato
-    | - ordini certi
-    | - ordini probabili
-    | - portafoglio
+    | Proiezione
     |--------------------------------------------------------------------------
     */
 
@@ -98,6 +90,12 @@ function updateDashboardFromAnalysis(analysis) {
     );
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Realizzato
+    |--------------------------------------------------------------------------
+    */
+
     setText(
         "metric-realized",
         "€ 0,00"
@@ -109,6 +107,12 @@ function updateDashboardFromAnalysis(analysis) {
         "—"
     );
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Confronto con Budget
+    |--------------------------------------------------------------------------
+    */
 
     const budgetValue =
         parseBudgetValue(
@@ -137,7 +141,8 @@ function updateDashboardFromAnalysis(analysis) {
 
 
         const gap =
-            projection - budgetValue;
+            projection -
+            budgetValue;
 
 
         setText(
